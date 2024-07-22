@@ -1,0 +1,42 @@
+{
+    "name": "stevie/warden",
+    "description": "A capabilities-based role system for Laravel.",
+    "version": "0.1.0",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Stevie\\Warden\\": "src/",
+            "Stevie\\Warden\\Database\\Factories\\": "src/database/factories",
+            "Stevie\\Warden\\Database\\Seeders\\": "src/database/seeders",
+            "Tests\\": "tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Stevie McComb",
+            "email": "stevie.mccomb@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "illuminate/support": "^11.16"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.34",
+        "orchestra/testbench": "^9.2",
+        "mockery/mockery": "^1.6"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Stevie\\Warden\\Providers\\WardenServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
