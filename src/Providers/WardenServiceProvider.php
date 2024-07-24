@@ -45,7 +45,7 @@ class WardenServiceProvider extends ServiceProvider
      */
     private function defineGates(): void
     {
-        Gate::define('warden', [ config('warden.class_map.gates.can'), 'can' ]);
+        // Gate::define('warden', [ config('warden.class_map.gates.can'), 'can' ]);
         Gate::before(function (Authenticatable $user, string $capability, mixed $resource = null): ?bool {
             return (new (config('warden.class_map.gates.before')))->before($user, $capability, $resource);
         });

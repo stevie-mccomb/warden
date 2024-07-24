@@ -129,6 +129,7 @@ return [
         'roles' => 'roles',
         'capability_capability' => 'capability_capability',
         'capability_role' => 'capability_role',
+        'role_user' => 'role_user',
     ],
 
     /*

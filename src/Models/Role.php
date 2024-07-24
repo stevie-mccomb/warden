@@ -66,7 +66,7 @@ class Role extends Model
      */
     public function capabilities(): BelongsToMany
     {
-        return $this->belongsToMany(Capability::class);
+        return $this->belongsToMany(Capability::class, config('warden.tables.capability_role'));
     }
 
     /**

@@ -29,7 +29,7 @@ trait HasRoles
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class)->withPivot('is_active');
+        return $this->belongsToMany(Role::class, config('warden.tables.role_user'))->withPivot('is_active');
     }
 
     /**
@@ -51,8 +51,10 @@ trait HasRoles
      */
     public function setRoleAttribute(Role $role): bool
     {
-        if (!$this->roles()->where('roles.id', $role->id)->exists()) throw new InvalidRoleException;
-        if ($this->roles()->where('roles.id', $role->id)->wherePivot('is_active', 1)->exists()) return false;
+        $table = config('warden.tables.roles');
+
+        if (!$this->roles()->where("$table.id", $role->id)->exists()) throw new InvalidRoleException;
+        if ($this->roles()->where("$table.id", $role->id)->wherePivot('is_active', 1)->exists()) return false;
         $this->roles()->newPivotQuery()->update([ 'is_active' => 0 ]);
         $this->roles()->updateExistingPivot($role->id, [ 'is_active' => 1 ]);
         return true;

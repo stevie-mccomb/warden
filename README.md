@@ -1,3 +1,7 @@
+![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20)
+![Code Coverage: 100%](https://img.shields.io/badge/Code%20Coverage-100%25-green "Code Coverage: 100%")
+![SemVer](https://img.shields.io/badge/SemVer-0.1.0-blue)
+
 ![Warden](https://raw.githubusercontent.com/stevie-mccomb/warden/trunk/assets/warden-logo.webp "Warden")
 
 ## Capabilities-based security system for Laravel.

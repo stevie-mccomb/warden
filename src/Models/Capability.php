@@ -66,7 +66,7 @@ class Capability extends Model
      */
     public function dependencies(): BelongsToMany
     {
-        return $this->belongsToMany(Capability::class, null, 'dependent_id', 'dependency_id');
+        return $this->belongsToMany(Capability::class, config('warden.tables.capability_capability'), 'dependent_id', 'dependency_id');
     }
 
     /**
@@ -74,7 +74,7 @@ class Capability extends Model
      */
     public function dependents(): BelongsToMany
     {
-        return $this->belongsToMany(Capability::class, null, 'dependency_id', 'dependent_id');
+        return $this->belongsToMany(Capability::class, config('warden.tables.capability_capability'), 'dependency_id', 'dependent_id');
     }
 
     /**
@@ -82,7 +82,7 @@ class Capability extends Model
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class, config('warden.tables.capability_role'));
     }
 
     /**
