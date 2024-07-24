@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('capabilities', function (Blueprint $table) {
+        Schema::create(config('warden.tables.capabilities'), function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('capabilities');
+        Schema::dropIfExists(config('warden.tables.capabilities'));
     }
 };

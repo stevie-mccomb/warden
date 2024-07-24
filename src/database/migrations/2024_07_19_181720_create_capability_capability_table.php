@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('capability_capability', function (Blueprint $table) {
+        Schema::create(config('warden.tables.capability_capability'), function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('dependency_id');
             $table->unsignedBigInteger('dependent_id');
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->dateTime('updated_at')->useCurrent();
         });
 
-        Schema::table('capability_capability', function (Blueprint $table) {
+        Schema::table(config('warden.tables.capability_capability'), function (Blueprint $table) {
             $table->unique([ 'dependency_id', 'dependent_id' ]);
 
             $table->foreign('dependency_id')->references('id')->on('capabilities')->onDelete('cascade')->onUpdate('cascade');
@@ -32,11 +32,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('capability_capability', function (Blueprint $table) {
-            $table->dropForeign('capability_capability_dependency_id_foreign');
-            $table->dropForeign('capability_capability_dependent_id_foreign');
+        Schema::table(config('warden.tables.capability_capability'), function (Blueprint $table) {
+            $table->dropForeign(config('warden.tables.capability_capability') . '_dependency_id_foreign');
+            $table->dropForeign(config('warden.tables.capability_capability') . '_dependent_id_foreign');
         });
 
-        Schema::dropIfExists('capability_capability');
+        Schema::dropIfExists(config('warden.tables.capability_capability'));
     }
 };

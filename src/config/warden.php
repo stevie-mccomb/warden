@@ -4,39 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Class Map
-    |--------------------------------------------------------------------------
-    |
-    | Don't like the way Warden handles something? No worries, just replace
-    | Warden's base class here with one of your own classes.
-    |
-    | You can even extend Warden's base class and change part of its
-    | implementation rather than replacing the full functionality, if desired.
-    |
-    */
-
-    'class_map' => [
-        /**
-         * Database Seeders
-         */
-        'seeders' => [
-            'capabilities' => \Stevie\Warden\Database\Seeders\CapabilitiesTableSeeder::class,
-            'roles' => \Stevie\Warden\Database\Seeders\RolesTableSeeder::class,
-            'capability_capability' => \Stevie\Warden\Database\Seeders\CapabilityCapabilityTableSeeder::class,
-            'capability_role' => \Stevie\Warden\Database\Seeders\CapabilityRoleTableSeeder::class,
-        ],
-
-        /**
-         * Security Gates
-         */
-        'gates' => [
-            'before' => \Stevie\Warden\Gates\Before::class,
-            'can' => \Stevie\Warden\Gates\Can::class,
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Capabilities
     |--------------------------------------------------------------------------
     |
@@ -139,6 +106,61 @@ return [
         'purge-users' => [ 'view-users', 'create-users', 'update-users', 'restore-users', 'delete-users' ],
 
         // etc.
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Database Tables
+    |--------------------------------------------------------------------------
+    |
+    | Here you can change the default database table names. Change the values,
+    | not the keys. The keys are what Warden uses to identify which migration
+    | is responsible for that table.
+    |
+    | Note that if you have already run your migrations, you will need to
+    | roll back before changing these, and then roll forward after.
+    | Alternatively, you can publish new migrations and phase out your old
+    | tables after deployment to production.
+    |
+    */
+
+    'tables' => [
+        'capabilities' => 'capabilities',
+        'roles' => 'roles',
+        'capability_capability' => 'capability_capability',
+        'capability_role' => 'capability_role',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Class Map
+    |--------------------------------------------------------------------------
+    |
+    | Don't like the way Warden handles something? No worries, just replace
+    | Warden's base class here with one of your own classes.
+    |
+    | You can even extend Warden's base class and change part of its
+    | implementation rather than replacing the full functionality, if desired.
+    |
+    */
+
+    'class_map' => [
+        /**
+         * Database Seeders
+         */
+        'seeders' => [
+            'capabilities' => \Stevie\Warden\Database\Seeders\CapabilitiesTableSeeder::class,
+            'roles' => \Stevie\Warden\Database\Seeders\RolesTableSeeder::class,
+            'capability_capability' => \Stevie\Warden\Database\Seeders\CapabilityCapabilityTableSeeder::class,
+            'capability_role' => \Stevie\Warden\Database\Seeders\CapabilityRoleTableSeeder::class,
+        ],
+
+        /**
+         * Security Gates
+         */
+        'gates' => [
+            'before' => \Stevie\Warden\Gates\Before::class,
+        ],
     ],
 
     /*

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role_user', function (Blueprint $table) {
+        Schema::create(config('warden.tables.role_user'), function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('role_id');
             $table->unsignedBigInteger('user_id');
@@ -20,9 +20,9 @@ return new class extends Migration
             $table->dateTime('updated_at')->useCurrent();
         });
 
-        Schema::table('role_user', function (Blueprint $table) {
+        Schema::table(config('warden.tables.role_user'), function (Blueprint $table) {
             $table->unique([ 'role_id', 'user_id' ]);
-            
+
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
@@ -33,11 +33,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('role_user', function (Blueprint $table) {
-            $table->dropForeign('role_user_role_id_foreign');
-            $table->dropForeign('role_user_user_id_foreign');
+        Schema::table(config('warden.tables.role_user'), function (Blueprint $table) {
+            $table->dropForeign(config('warden.tables.role_user') . '_role_id_foreign');
+            $table->dropForeign(config('warden.tables.role_user') . '_user_id_foreign');
         });
 
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists(config('warden.tables.role_user'));
     }
 };
