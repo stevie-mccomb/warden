@@ -1,3 +1,5 @@
+![Warden](https://raw.githubusercontent.com/stevie-mccomb/warden/trunk/assets/warden-logo.webp "Warden")
+
 # Warden
 ## Capabilities-based security system for Laravel.
 
