@@ -276,3 +276,98 @@ class PostPolicy
     }
 }
 ```
+
+### Allow user-defined roles in your application
+
+First, override the built-in role seeders to prevent user-defined roles from being overwritten in future database updates. You will need to define your own logic for how you want to seed these tables (or even just make empty seeders that do nothing if you don't plan on having any built-in roles).
+
+```php
+// config/warden.php
+
+'class_map' => [
+    'seeders' => [
+        // ...
+        'roles' => \Database\Seeders\RolesTableSeeder::class,
+        'capability_role' => \Database\Seeders\CapabilityRoleTableSeeder::class,
+    ],
+
+    // ...
+],
+```
+
+A common approach is to have reserved role names like "Super Administrator" or "Client Administrator" which you seed in your back-end and have special logic within the application, while allowing some users (maybe those Client Administrators, for example) to define their own roles.
+
+This way, your seeders can seed your application's reserved roles while your users can create their own roles and they can both co-exist while using Warden's logic internally. See example custom seeder below.
+
+```php
+use Illuminate\Support\Database\Schema;
+
+class ExampleRolesTableSeeder
+{
+    public function run()
+    {
+        $roles = config('warden.tables.roles');
+
+        DB::statement("
+            INSERT INTO
+                $roles (`name`, `slug`)
+            VALUES
+                (1, 'Super Administrator', 'super-administrator'),
+                (2, 'Client Administrator', 'client-administrator')
+            ON DUPLICATE KEY UPDATE
+                `name` = VALUES(`name`),
+                `slug` = VALUES(`slug`),
+                `updated_at` = CURRENT_TIMESTAMP;
+        ");
+    }
+}
+```
+
+In the example above, these two roles with ID 1 and 2 can be added into your application early on, before users can define their own roles and they'll be seeded when you run the `artisan warden:update` command. If you wanted to prevent users from defining their own roles with the same names, you could do that in your validation logic.
+
+Next, create routes and controllers for defining roles and attaching them to your users.
+
+```php
+// e.g. POST /admin/roles
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Stevie\Warden\Models\Role;
+
+class RoleController
+{
+    /**
+     * Create a new role with the given capabilities
+     * and attach it to the given users.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        // Validate the input.
+        $capabilitiesTable = config('warden.tables.capabilities');
+        $rolesTable = config('warden.tables.roles');
+        $safe = $request->validate([
+            'name' => "required|string|max:255|unique:$rolesTable",
+            'slug' => "required|string|max:255|unique:$rolesTable",
+            'capabilities' => 'nullable|array',
+            'capabilities.*' => "required|integer|exists:$capabilitiesTable",
+            'users' => 'nullable|array',
+            'users.*' => 'required|integer|exists:users',
+        ]);
+
+        // Create the role.
+        $role = Role::create([
+            'name' => $safe['name'],
+            'slug' => $safe['slug'],
+        ]);
+
+        // Attach the capabilities to the role.
+        $role->capabilities()->sync($safe['capabilities']);
+
+        // Attach the role to the given users.
+        $role->users()->sync($safe['users']);
+
+        // Redirect.
+        return to_route('roles.index')
+            ->with('success', 'Role successfully created.');
+    }
+}
+```
