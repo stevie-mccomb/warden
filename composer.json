@@ -1,7 +1,6 @@
 {
-    "name": "stevie/warden",
+    "name": "stevie-mccomb/warden",
     "description": "A capabilities-based role system for Laravel.",
-    "version": "0.1.0",
     "type": "library",
     "license": "MIT",
     "autoload": {
