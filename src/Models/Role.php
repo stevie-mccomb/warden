@@ -5,7 +5,6 @@ namespace Stevie\Warden\Models;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stevie\Warden\Database\Factories\RoleFactory;
 use Stevie\Warden\Events\RoleCreated;
@@ -23,10 +22,12 @@ use Stevie\Warden\Events\RoleSaving;
 use Stevie\Warden\Events\RoleTrashed;
 use Stevie\Warden\Events\RoleUpdated;
 use Stevie\Warden\Events\RoleUpdating;
+use Stevie\Warden\Relations\WardenBelongsToMany;
+use Stevie\Warden\Traits\HasWardenRelationships;
 
 class Role extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasWardenRelationships, SoftDeletes;
 
     /**
      * The event map for the model.
@@ -64,9 +65,9 @@ class Role extends Model
     /**
      * Return the capabilities that this role grants.
      */
-    public function capabilities(): BelongsToMany
+    public function capabilities(): WardenBelongsToMany
     {
-        return $this->belongsToMany(Capability::class, config('warden.tables.capability_role'));
+        return $this->wardenBelongsToMany(Capability::class, config('warden.tables.capability_role'));
     }
 
     /**
@@ -75,5 +76,20 @@ class Role extends Model
     protected static function newFactory(): Factory
     {
         return RoleFactory::new();
+    }
+
+    /**
+     * Getter that ensures the self::$table attribute is parsed from Warden's config file.
+     *
+     * @var  string  $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        if ($key === 'table') {
+            return config('warden.tables.roles');
+        }
+
+        return parent::__get($key);
     }
 }

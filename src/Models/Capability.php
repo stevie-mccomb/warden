@@ -92,4 +92,19 @@ class Capability extends Model
     {
         return CapabilityFactory::new();
     }
+
+    /**
+     * Getter that ensures the self::$table attribute is parsed from Warden's config file.
+     *
+     * @var  string  $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        if ($key === 'table') {
+            return config('warden.tables.capabilities');
+        }
+
+        return parent::__get($key);
+    }
 }

@@ -152,6 +152,31 @@ This is an optional feature that allows you to assign capabilities as dependenci
 
 For example, let's say your application has a dedicated admin panel where all administrative pages live. One of the administrative operations of your application may be user management. You may have a `view-admin` capability and a `manage-users` capability, but you can't manage users without accessing the admin area, so it makes sense for `manage-users` to depend on `view-admin` and for your application to automatically grant that dependency when `manage-users` is granted.
 
+If you want to make use of this feature when syncing capabilities to roles in your own logic, there is a helper method called `syncWithDependencies` on the relation returned from `Role::capabilities` which makes it easy to sync capabilities *and* their dependencies without having all of the dependencies selected in the UI, though it's recommended you still select the dependencies in the UI for a better UX and to avoid user confusion. See example below for usage of `syncWithDependencies`:
+
+```php
+// config/warden.php
+'capability_dependency_map' => [
+    'update-posts' => [
+        'index-posts',
+    ],
+],
+
+---
+
+// Controller
+use Stevie\Warden\Models\Capability;
+use Stevie\Warden\Models\Role;
+
+$capabilities = Capability::where('slug', 'update-posts')->value('id');
+
+$role = Role::where('slug', 'example-role')->first();
+
+$role->capabilities()->syncWithDependencies($capabilities);
+
+dd($role->capabilities->toArray()); // [ 'view-posts', 'update-posts' ]
+```
+
 ### Database Tables
 
 You can change the names of Warden's default tables, if desired. The keys of this array should not be changed as those are Warden's internal identifiers for the tables; the values are the table names.
